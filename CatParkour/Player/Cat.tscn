@@ -1,0 +1,100 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://blendergarb/cube_Cube.mesh" type="ArrayMesh" id=1]
+[ext_resource path="res://Player/Cat.gd" type="Script" id=2]
+[ext_resource path="res://crosshair1.png" type="Texture" id=3]
+[ext_resource path="res://icon.png" type="Texture" id=4]
+
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+
+[sub_resource type="Gradient" id=7]
+offsets = PoolRealArray( 0, 0.470238, 0.979167, 1 )
+colors = PoolColorArray( 0.799316, 0.799316, 0.799316, 1, 0, 1, 0.610352, 1, 0, 0, 0, 1, 1, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
+
+[sub_resource type="Curve" id=5]
+max_value = 2.0
+_data = [ Vector2( 0, 2 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="ParticlesMaterial" id=3]
+direction = Vector3( 0, 0, -100 )
+spread = 58.13
+gravity = Vector3( 0, 2, 0 )
+initial_velocity = 1.0
+initial_velocity_random = 1.0
+scale_curve = SubResource( 6 )
+color_ramp = SubResource( 8 )
+
+[sub_resource type="CapsuleMesh" id=4]
+radius = 0.089
+mid_height = 0.001
+radial_segments = 50
+
+[node name="Cat" type="KinematicBody"]
+collision_layer = 2
+script = ExtResource( 2 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="cube_Cube" type="MeshInstance" parent="."]
+transform = Transform( 0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0 )
+mesh = ExtResource( 1 )
+material/0 = null
+
+[node name="camerapivot" type="Spatial" parent="."]
+
+[node name="SpringArm" type="SpringArm" parent="camerapivot"]
+transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0.5, 0 )
+spring_length = 2.0
+
+[node name="Camera" type="Camera" parent="camerapivot/SpringArm"]
+
+[node name="DashSprite" type="Sprite3D" parent="camerapivot/SpringArm/Camera"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -16.308 )
+visible = false
+texture = ExtResource( 4 )
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer"]
+modulate = Color( 0.643137, 0.643137, 0.643137, 0.341176 )
+margin_left = 506.0
+margin_top = 294.0
+margin_right = 518.0
+margin_bottom = 306.0
+rect_min_size = Vector2( 12, 12 )
+texture = ExtResource( 3 )
+expand = true
+stretch_mode = 1
+
+[node name="DashPart" type="Particles" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0676177, -0.229365 )
+material_override = SubResource( 2 )
+emitting = false
+amount = 600
+lifetime = 3.0
+randomness = 1.0
+visibility_aabb = AABB( -4, -2.92969, -4, 8, 8, 8 )
+local_coords = false
+process_material = SubResource( 3 )
+draw_pass_1 = SubResource( 4 )
+
+[node name="gun" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0957683, -0.286158 )
